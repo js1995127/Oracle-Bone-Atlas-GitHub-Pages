@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#11120f" />
+    <meta
+      name="description"
+      content="甲骨万象：可检索、可溯源的甲骨文字形数字图鉴，逐字对照现代汉字。"
+    />
+    <title>甲骨万象｜甲骨文字形数字图鉴</title>
+    <link rel="preload" href="./assets/Oracular-Catalog.woff" as="font" type="font/woff" crossorigin />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./assets/catalog.js"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#catalog" data-i18n="skipToCatalog">跳到字形图鉴</a>
+
+    <header class="site-header">
+      <a class="brand" href="./" data-i18n-aria-label="brandHomeLabel" aria-label="甲骨万象首页">
+        <span class="brand-mark oracle-glyph" aria-hidden="true">甲</span>
+        <span class="brand-copy">
+          <strong data-i18n="brandName">甲骨万象</strong>
+          <small data-i18n="brandKicker">ORACLE BONE ATLAS</small>
+        </span>
+      </a>
+
+      <div class="header-meta" data-i18n-aria-label="collectionOverview" aria-label="馆藏数据概览">
+        <span><b data-meta="mappedEntries">—</b> <span data-i18n="searchableEntries">可检索字头</span></span>
+        <span class="header-rule" aria-hidden="true"></span>
+        <span><b>24,701</b> <span data-i18n="scholarlyForms">学术字形基准</span></span>
+      </div>
+
+      <div class="header-actions">
+        <button
+          class="language-toggle"
+          id="languageToggle"
+          type="button"
+          data-i18n-aria-label="switchLanguage"
+          aria-label="切换到英文"
+        >
+          <span data-language-option="zh">中文</span>
+          <i aria-hidden="true">/</i>
+          <span data-language-option="en">EN</span>
+        </button>
+        <button
+          class="quiet-button"
+          id="openAbout"
+          type="button"
+          aria-haspopup="dialog"
+          data-i18n-aria-label="dataNotesButton"
+          aria-label="数据说明"
+        >
+          <span data-i18n="dataNotes">数据说明</span>
+          <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="atlas-intro" aria-labelledby="pageTitle">
+        <div class="intro-title">
+          <p class="eyebrow"><span></span> <span data-i18n="introEyebrow"></span></p>
+          <h1 id="pageTitle" data-i18n="pageTitle">字从刻痕中醒来</h1>
+        </div>
+        <p class="intro-note" data-i18n="introNote">
+          每一张字卡呈现一个可直接对照的甲骨文字头。一个现代汉字可能拥有多种古代写法；这里先展示开放字库中的代表字形。
+        </p>
+      </section>
+
+      <section class="search-workbench" data-i18n-aria-label="searchAndFilter" aria-label="检索与筛选">
+        <div class="search-row">
+          <label class="search-box" for="searchInput">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4.2 4.2"></path>
+            </svg>
+            <span class="sr-only" data-i18n="searchLabel">搜索现代汉字或 Unicode 编码</span>
+            <input
+              id="searchInput"
+              type="search"
+              autocomplete="off"
+              data-i18n-placeholder="searchPlaceholder"
+              placeholder="搜索现代汉字，如「日」「马」「雨」"
+            />
+            <kbd aria-hidden="true">/</kbd>
+          </label>
+          <button class="encounter-button" id="randomButton" type="button">
+            <span class="oracle-glyph" aria-hidden="true">卜</span>
+            <span data-i18n="randomEncounter">偶遇一字</span>
+          </button>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-set" data-i18n-aria-label="glyphRange" aria-label="字形范围">
+            <button type="button" class="filter-chip is-active" data-filter="all" aria-pressed="true">
+              <span data-i18n="filterAll">全部</span> <span data-count="all">—</span>
+            </button>
+            <button type="button" class="filter-chip" data-filter="basic" aria-pressed="false">
+              <span data-i18n="filterBasic">基本汉字</span> <span data-count="basic">—</span>
+            </button>
+            <button type="button" class="filter-chip" data-filter="extended" aria-pressed="false">
+              <span data-i18n="filterExtended">扩展字</span> <span data-count="extended">—</span>
+            </button>
+            <button type="button" class="filter-chip" data-filter="spotlight" aria-pressed="false">
+              <span data-i18n="filterSpotlight">精选</span> <span data-count="spotlight">—</span>
+            </button>
+          </div>
+
+          <button class="mode-toggle" id="modeToggle" type="button" aria-pressed="false">
+            <span class="mode-swatch" aria-hidden="true"></span>
+            <span id="modeLabel">骨白模式</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="catalog-section" id="catalog" aria-labelledby="resultHeading">
+        <div class="catalog-heading">
+          <div>
+            <p class="section-index">CATALOGUE · 01</p>
+            <h2 id="resultHeading"><span id="resultCount">—</span> <span data-i18n="glyphUnit">个字形</span></h2>
+          </div>
+          <p id="resultContext" aria-live="polite">按熟悉程度与 Unicode 编码排列</p>
+        </div>
+
+        <div class="glyph-grid" id="glyphGrid"></div>
+
+        <div class="empty-state" id="emptyState" hidden>
+          <span class="oracle-glyph" aria-hidden="true">亡</span>
+          <h3 data-i18n="emptyTitle">没有找到对应字形</h3>
+          <p data-i18n="emptyBody">试试输入单个现代汉字，或清除筛选条件。</p>
+          <button type="button" id="resetSearch" data-i18n="viewAll">查看全部</button>
+        </div>
+
+        <button class="load-more" id="loadMore" type="button">
+          <span data-i18n="loadMore">继续展开</span>
+          <small id="remainingCount">—</small>
+        </button>
+      </section>
+
+      <section class="boundary-strip" data-i18n-aria-label="dataBoundaryLabel" aria-label="资料边界">
+        <div class="boundary-number">02</div>
+        <div>
+          <p class="section-index">SCHOLARLY BOUNDARY</p>
+          <h2 data-i18n="boundaryTitle">“全部”不是一个静止的数字</h2>
+        </div>
+        <p data-i18n="boundaryBody">
+          新材料、异体归并与释读意见仍在更新。本站不为未释读字强配现代汉字，并把“字头”与“字形”分开统计。
+        </p>
+        <button type="button" id="openSources" data-i18n="viewSources">查看口径与来源</button>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-mark oracle-glyph" aria-hidden="true">文</div>
+      <p data-i18n="footerEdition">甲骨万象 · 开放研究预览版</p>
+      <p data-i18n="footerLicense">字形字体依 SIL Open Font License 1.1 使用</p>
+    </footer>
+
+    <dialog class="detail-dialog" id="detailDialog" aria-labelledby="detailTitle">
+      <button class="dialog-close" type="button" data-close-dialog data-i18n-aria-label="closeDetails" aria-label="关闭详情">×</button>
+      <div class="detail-layout">
+        <div class="detail-stage">
+          <span class="detail-stage-label">ORACLE FORM</span>
+          <div class="detail-glyph oracle-glyph" id="detailGlyph" aria-hidden="true"></div>
+          <div class="detail-coordinate" id="detailCoordinate"></div>
+        </div>
+        <div class="detail-copy">
+          <p class="eyebrow"><span></span> <span data-i18n="modernComparison">现代汉字对照</span></p>
+          <h2 id="detailTitle"></h2>
+          <p class="detail-lead" data-i18n="detailLead">
+            此卡展示字库中与该现代 Unicode 字符直接对应的代表字形。甲骨文书写并不标准化，同一字头可存在方向、构形与笔势差异。
+          </p>
+          <dl class="detail-list">
+            <div>
+              <dt data-i18n="modernCharacter">现代字</dt>
+              <dd id="detailModern"></dd>
+            </div>
+            <div>
+              <dt>Unicode</dt>
+              <dd id="detailCode"></dd>
+            </div>
+            <div>
+              <dt data-i18n="characterBlock">字符区段</dt>
+              <dd id="detailBlock"></dd>
+            </div>
+            <div>
+              <dt data-i18n="mappingStatus">映射状态</dt>
+              <dd><span class="status-dot"></span> <span data-i18n="directMapping">字库直接映射</span></dd>
+            </div>
+          </dl>
+          <div class="detail-actions">
+            <button type="button" id="copyCharacter" data-i18n="copyCharacter">复制现代字</button>
+            <a href="https://oracular.azurewebsites.net/glyphs/download" target="_blank" rel="noreferrer">
+              <span data-i18n="viewFontSource">查看字库来源 ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="source-dialog" id="sourceDialog" aria-labelledby="sourceTitle">
+      <button class="dialog-close" type="button" data-close-dialog data-i18n-aria-label="closeDataNotes" aria-label="关闭数据说明">×</button>
+      <div class="source-inner">
+        <p class="eyebrow"><span></span> <span data-i18n="sourcesEyebrow">数据边界与出处</span></p>
+        <h2 id="sourceTitle" data-i18n="sourcesTitle">这个图鉴收录的“全部”指什么？</h2>
+        <p class="source-lead" data-i18n="sourcesLead">
+          甲骨文存在字头、异体字形、合文、未释读字等不同统计单位，因此没有一张永远不变的“全部对照表”。本版只把具有现代 Unicode 直接映射的字形放入主图鉴。
+        </p>
+
+        <div class="source-metrics">
+          <article>
+            <strong>2,548</strong>
+            <span data-i18n="headwords">字头</span>
+            <p data-i18n="headwordsNote">中央研究院“小学堂甲骨文”的现行收录口径。</p>
+          </article>
+          <article>
+            <strong>24,701</strong>
+            <span data-i18n="forms">字形</span>
+            <p data-i18n="formsNote">同一字头下可包含多个真实著录字形。</p>
+          </article>
+          <article>
+            <strong>1,588 + 9,411</strong>
+            <span data-i18n="hustClasses">HUST-OBC 类别</span>
+            <p data-i18n="hustNote">分别为已释读与未释读类别，未释读类别可能仍有重复。</p>
+          </article>
+          <article>
+            <strong data-meta="mappedEntries">—</strong>
+            <span data-i18n="siteMappings">本站可检索映射</span>
+            <p data-i18n="siteMappingsNote">从开放字体的 CJK Unicode 映射中提取，不包含无现代码位的专用字形。</p>
+          </article>
+        </div>
+
+        <div class="source-links">
+          <a href="https://xiaoxue.iis.sinica.edu.tw/jiaguwen" target="_blank" rel="noreferrer">
+            <span>01</span>
+            <div><b data-i18n="xiaoxueTitle">小学堂甲骨文</b><small data-i18n="xiaoxueNote">中央研究院 · 字头与字形统计基准</small></div>
+            <i>↗</i>
+          </a>
+          <a href="https://www.nature.com/articles/s41597-024-03807-x" target="_blank" rel="noreferrer">
+            <span>02</span>
+            <div><b>HUST-OBC</b><small data-i18n="hustSourceNote">Scientific Data · 已释读与未释读开放数据集</small></div>
+            <i>↗</i>
+          </a>
+          <a href="https://oracular.azurewebsites.net/glyphs/download" target="_blank" rel="noreferrer">
+            <span>03</span>
+            <div><b data-i18n="fontTitle">镜原甲骨字库</b><small data-i18n="fontNote">Peichao Qin · SIL OFL 1.1 开放字体</small></div>
+            <i>↗</i>
+          </a>
+        </div>
+
+        <p class="source-footnote" data-i18n="sourceFootnote">
+          学术提醒：字体或数据集中的“现代字对照”是检索入口，不自动等于学界对字义、用法和释读已达成完全共识。
+        </p>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
